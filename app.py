@@ -94,9 +94,12 @@ if __name__ == "__main__":
             st.markdown(message["content"])
 
     if query:= st.chat_input("Hukuki sorunuzu buraya yazın: "):
+        with st.chat_message("user"):
+            st.markdown(query)
+
         st.session_state.messages.append({"role":"user", "content":query})
 
-        with st.chat_message("user"):
+        with st.chat_message("assistant"):
             with st.spinner("Yasal kaynaklar taranıyor, lütfen bekleyin..."):
                 response = get_answer(client=client,
                                       config=config,
