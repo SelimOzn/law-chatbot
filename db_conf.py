@@ -1,18 +1,16 @@
 import os.path
 import shutil
 from datasets import load_dataset
-import google.genai as genai
-from langchain_community.vectorstores import Chroma
-from sentence_transformers import SentenceTransformer
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_chroma.vectorstores import Chroma
 import chromadb
 from langchain_core.documents import Document
+from langchain_huggingface import HuggingFaceEmbeddings
 
 def create_db(db_path):
     embed_model_name = "sentence-transformers/all-MiniLM-L6-v2"
     dataset = load_dataset('ipproo/Turkish-law')
     train_ds = dataset['train']
-    df = train_ds.with_format("pandas")
+    df = train_ds.to_pandas()
     text = "Soru: " + df["soru"] + "\n" + "Cevap: " + df["cevap"]
     ds = text.to_list()
     docs = [Document(page_content=chunk) for chunk in ds]
@@ -37,9 +35,6 @@ def create_db(db_path):
     return vector_db
 
 
-
-
-
 if __name__ == '__main__':
-    create_db("asfa")
+    create_db("./data")
 
