@@ -7,7 +7,7 @@ from langchain_core.documents import Document
 from langchain_huggingface import HuggingFaceEmbeddings
 
 def create_db(db_path):
-    embed_model_name = "sentence-transformers/all-MiniLM-L6-v2"
+    embed_model_name = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
     dataset = load_dataset('ipproo/Turkish-law')
     train_ds = dataset['train']
     df = train_ds.to_pandas()
