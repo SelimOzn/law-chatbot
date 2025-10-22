@@ -84,3 +84,5 @@ law-chatbot/
 ## Web Linki
 - [https://huggingface.co/spaces/SelimOzn/law-chatbot](https://huggingface.co/spaces/SelimOzn/law-chatbot)
 
+![Uygulama Arayüzü](images/website.png)
+**Şekil 1**  Hugging Face Spaces üzerinde çalışan *T.C. Hukuk Danışmanı Chatbot* arayüzü. Solda kullanıcıların kendi hukuki belgelerini (.pdf veya .txt) yükleyebileceği doküman yönetimi bölümü, sağda ise chatbot ile etkileşim arayüzü görülüyor. Chatbot, `ipproo/Turkish-law` veri seti ve kullanıcılar tarafından yüklenen dokümanlar ile eğitilmiş bir RAG modeli olup, Türk hukuk sistemi kapsamında sorulara yanıt üretebiliyor.
