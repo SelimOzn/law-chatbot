@@ -32,6 +32,35 @@ T.C. Hukuk Sistemi üzerine uzmanlaşmış, RAG (Retrieval-Augmented Generation)
 -   **Hugging Face Embeddings:** `sentence-transformers/paraphrase-multilingual-mpnet-base-v2` modeli (metinleri vektöre dönüştürmek için)
 -   **Hugging Face Datasets:** `ipproo/Turkish-law` (temel bilgi veri seti)
 
+## RAG Mimarisi (RAG Architecture)
+
+Bu proje, bir sorguyu yanıtlamak için gelişmiş, hafıza destekli bir RAG (Retrieval-Augmented Generation) mimarisi kullanır. Sistem, temel olarak 4 adımdan oluşur:
+
+### 1. Konuşma Hafızası ve Sorgu Yeniden Yazma (Query Rewriting)
+
+Kullanıcının yeni sorgusu (`input`) ve tüm konuşma geçmişi (`chat_history`) alınır. Bu bilgiler, `create_history_aware_retriever` zinciri kullanılarak LLM'e (Gemini) gönderilir. LLM, geçmiş konuşmaya dayalı belirsiz sorguları (örn: "Peki bu davanın temyizi?") tek başına anlamlı bir arama sorgusuna (örn: "Boşanma davasının temyiz süreci nedir?") dönüştürür.
+
+### 2. Veri Getirme - Hibrit Arama (Hybrid Search)
+
+Yeniden yazılan bu sorgu, `EnsembleRetriever`'a (Hibrit Arayıcı) gönderilir. Bu arayıcı, en doğru bağlamı bulmak için iki farklı arama yöntemini eş zamanlı olarak çalıştırır:
+
+* **Anahtar Kelime Araması (BM25):** `BM25Retriever` kullanarak hafızadaki tüm dokümanlarda (yüklenen dosyalar dahil) anahtar kelime eşleşmesi arar. Bu, "Madde 96" veya "Konfederasyon" gibi spesifik terimler için etkilidir.
+* **Semantik Arama (ChromaDB):** Sorguyu `paraphrase-multilingual-mpnet-base-v2` modeli ile vektöre dönüştürür ve ChromaDB veritabanında anlamsal olarak en yakın doküman parçalarını arar. Bu, "mal paylaşımı nasıl yapılır?" gibi kavramsal sorgular için etkilidir.
+
+İki arama yönteminin sonuçları, belirlenen ağırlıklara (`weights=[0.3, 0.7]`) göre birleştirilerek en alakalı doküman parçaları (`context`) seçilir.
+
+### 3. Cevap Üretme (Generation)
+
+Bulunan bu doküman parçaları (`{context}`), tam konuşma geçmişi (`{chat_history}`) ve kullanıcının *orijinal* sorusu (`{input}`), `qa_system_prompt` adı verilen detaylı bir sistem talimatına yerleştirilir. Bu prompt, LLM'e (Gemini) sıkı `[KURALLAR]` (örn: "Sadece sana sunulan bağlamı kullan", "Yasal tavsiye verme") verir. LLM, bu zenginleştirilmiş prompt'u işler ve kurallara bağlı kalarak nihai cevabı üretir.
+
+### 4. Dinamik Belge Yükleme (Dynamic Document Ingestion)
+
+Kullanıcı kenar çubuktan (sidebar) yeni bir `.pdf` veya `.txt` dosyası yüklediğinde:
+1.  Belge `RecursiveCharacterTextSplitter` ile 2000 karakterlik parçalara (`chunks`) bölünür.
+2.  Bu yeni parçalar hem `ChromaDB` veritabanına (semantik arama için) hem de hafızadaki `all_docs` listesine (anahtar kelime araması için) eklenir.
+3.  `BM25Retriever`, güncellenen `all_docs` listesi üzerinden **sıfırdan yeniden oluşturulmak** zorundadır.
+4.  Bu nedenle, yeni dokümanları içermesi için tüm `rag_chain` (RAG zinciri) yeniden kurulur.
+
 ## Kurulum
 
 Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları izleyin:
