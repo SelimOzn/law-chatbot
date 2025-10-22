@@ -15,6 +15,11 @@ T.C. Hukuk Sistemi üzerine uzmanlaşmış, RAG (Retrieval-Augmented Generation)
 -   Konuşma hafızası sayesinde, önceki mesajlarınıza atıfta bulunarak takip soruları (Örn: "Peki bu davanın temyizi nedir?") sorabilirsiniz.
 -   Cevabın altında "Kullanılan hukuki kaynaklar" bölümünden, cevabın hangi belgelere dayandığını görebilirsiniz.
 
+## Veri Seti
+
+-   ipproo/Turkish-law; yalnızca Türk anayasasını içeren, Chatgpt, Claude vb. gibi sohbet robotları kullanılarak toplanmış, soru cevap şeklinde veriler içerir.
+-   Eğer kullanıcı doküman yüklerse, doğrudan bu doküman da veri seti olarak kullanılmaktadır.
+
 ## Teknoloji
 
 -   **Python 3.12**
@@ -39,6 +44,10 @@ Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları izleyin:
 
 2.  **Gerekli kütüphaneleri yükleyin:**
     ```bash
+    # Virtual environment oluşturup active edin (opsiyonel)
+    python3 -m venv chatbot-env
+    chatbot-env\Scripts\activate #Windows
+    #source chatbot-env/bin/activate  # macOS/Linux
     pip install -r requirements.txt
     ```
 
@@ -59,7 +68,7 @@ Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları izleyin:
 
 5.  **Uygulamayı çalıştırın:**
     ```bash
-    streamlit run app
+    streamlit run app.py
 
 ## Proje Yapısı
 ```
@@ -71,3 +80,7 @@ law-chatbot/
 ├── .env                      # GOOGLE_API_KEY
 └── README.md                 # Bu dosya
 ```
+
+## Web Linki
+- [https://huggingface.co/spaces/SelimOzn/law-chatbot](https://huggingface.co/spaces/SelimOzn/law-chatbot)
+
