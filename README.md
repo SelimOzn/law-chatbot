@@ -60,3 +60,14 @@ Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları izleyin:
 5.  **Uygulamayı çalıştırın:**
     ```bash
     streamlit run app
+
+## Proje Yapısı
+```
+law-chatbot/
+├── data/                     # ChromaDB veritabanı dosyalarının saklandığı klasör (db_conf.py tarafından oluşturulur)
+├── app.py                    # Ana Streamlit uygulaması + RAG sorgu akışı
+├── db_conf.py                # Veri tabanını oluşturma
+├── requirements.txt          # Bağımlılıklar
+├── .env                      # GOOGLE_API_KEY
+└── README.md                 # Bu dosya
+```
